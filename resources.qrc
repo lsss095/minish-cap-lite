@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="minish_woods.png">images/minish_woods.png</file>
+    </qresource>
+</RCC>
