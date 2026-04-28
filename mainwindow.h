@@ -4,10 +4,13 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QKeyEvent>
-#include <QPixmap>
-#include <QRect>
-#include <vector>
 #include <QMouseEvent>
+#include <vector>
+
+#include "player.h"
+#include "gamemap.h"
+#include "camera.h"
+#include "overlayobject.h"
 
 class MainWindow : public QMainWindow
 {
@@ -23,30 +26,14 @@ protected:
 private:
     QLabel *screenLabel;
 
-    QPixmap fullMap;
+    Player player;
+    GameMap gameMap;
+    Camera camera;
 
-    int playerX;
-    int playerY;
+    std::vector<OverlayObject> overlayObjects;
 
-    int cameraX;
-    int cameraY;
-
-    enum Direction { Up, Down, Left, Right };
-    Direction playerDir;
-
-    std::vector<QRect> blockedAreas;
-
-    static const int LOGIC_WIDTH = 240;
-    static const int LOGIC_HEIGHT = 160;
-    static const int SCALE = 4;
-    static const int PLAYER_WIDTH = 12;
-    static const int PLAYER_HEIGHT = 12;
-    static const int MOVE_STEP = 5;
-
-    void updateCamera();
     void drawScene();
-    void initBlockedAreas();
-    bool canMoveTo(int x, int y);
+    void initOverlayObjects();
 };
 
 #endif

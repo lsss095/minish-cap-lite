@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/images">
         <file alias="minish_woods.png">images/minish_woods.png</file>
+        <file alias="wood.png">images/wood.png</file>
+        <file alias="wood1.png">images/wood1.png</file>
+        <file alias="wood2.png">images/wood2.png</file>
+        <file alias="wood3.png">images/wood3.png</file>
     </qresource>
 </RCC>

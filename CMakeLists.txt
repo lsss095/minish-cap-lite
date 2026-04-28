@@ -11,12 +11,25 @@ qt_add_executable(homeworkdemo
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+    gameconfig.h
+    player.h
+    player.cpp
+    gamemap.h
+    gamemap.cpp
+    camera.h
+    camera.cpp
+    overlayobject.h
+    overlayobject.cpp
 )
 
 qt_add_resources(homeworkdemo "resources"
     PREFIX "/"
     FILES
         images/minish_woods.png
+        images/wood.png
+        images/wood1.png
+        images/wood2.png
+        images/wood3.png
 )
 
 target_link_libraries(homeworkdemo
