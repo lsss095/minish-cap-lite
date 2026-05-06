@@ -1,0 +1,14 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="images/minish_woods.png">/Users/lansu/homeworkdemo/images/minish_woods.png</file>
+    <file alias="images/wood0.png">/Users/lansu/homeworkdemo/images/wood0.png</file>
+    <file alias="images/wood1.png">/Users/lansu/homeworkdemo/images/wood1.png</file>
+    <file alias="images/wood2.png">/Users/lansu/homeworkdemo/images/wood2.png</file>
+    <file alias="images/wood3.png">/Users/lansu/homeworkdemo/images/wood3.png</file>
+    <file alias="images/link_shadow.png">/Users/lansu/homeworkdemo/images/link_shadow.png</file>
+    <file alias="images/link_actions_32.png">/Users/lansu/homeworkdemo/images/link_actions_32.png</file>
+    <file alias="images/link_roll_32.png">/Users/lansu/homeworkdemo/images/link_roll_32.png</file>
+    <file alias="images/link_minish1_sheet_32.png">/Users/lansu/homeworkdemo/images/link_minish1_sheet_32.png</file>
+  </qresource>
+</RCC>
+

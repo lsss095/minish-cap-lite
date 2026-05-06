@@ -8,5 +8,6 @@
         <file alias="link_shadow.png">images/link_shadow.png</file>
         <file alias="link_actions_32.png">images/link_actions_32.png</file>
         <file alias="link_roll_32.png">images/link_roll_32.png</file>
+        <file alias="link_minish1_sheet_32_32.png">images/link_minish1_sheet_32.png</file>
     </qresource>
 </RCC>

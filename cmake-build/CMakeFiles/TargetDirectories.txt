@@ -1,0 +1,9 @@
+/Users/lansu/homeworkdemo/cmake-build/CMakeFiles/homeworkdemo.dir
+/Users/lansu/homeworkdemo/cmake-build/CMakeFiles/edit_cache.dir
+/Users/lansu/homeworkdemo/cmake-build/CMakeFiles/rebuild_cache.dir
+/Users/lansu/homeworkdemo/cmake-build/CMakeFiles/list_install_components.dir
+/Users/lansu/homeworkdemo/cmake-build/CMakeFiles/install.dir
+/Users/lansu/homeworkdemo/cmake-build/CMakeFiles/install/local.dir
+/Users/lansu/homeworkdemo/cmake-build/CMakeFiles/install/strip.dir
+/Users/lansu/homeworkdemo/cmake-build/CMakeFiles/homeworkdemo_autogen_timestamp_deps.dir
+/Users/lansu/homeworkdemo/cmake-build/CMakeFiles/homeworkdemo_autogen.dir

@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+22af79a01a74439d4163dcdffe67ea9e .qt/rcc/qrc_resources.cpp
+e5723205200232b6e2f5a600aaa25f85 CMakeFiles/homeworkdemo_autogen
+0f4045ad997f0cc500ca3e9e9d53fdf6 homeworkdemo_autogen/timestamp
