@@ -105,4 +105,5 @@ void GameMap::initBlockedAreas()
     m_blockedAreas.push_back(QRect(145, 276, 32, 32));
     m_blockedAreas.push_back(QRect(177, 276, 64, 64));
     m_blockedAreas.push_back(QRect(545, 20, 32, 32));
+    m_blockedAreas.push_back(QRect(569, 308, 32, 32));
 }

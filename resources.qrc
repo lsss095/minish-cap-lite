@@ -1,9 +1,12 @@
 <RCC>
     <qresource prefix="/images">
         <file alias="minish_woods.png">images/minish_woods.png</file>
-        <file alias="wood.png">images/wood.png</file>
+        <file alias="wood0.png">images/wood.png</file>
         <file alias="wood1.png">images/wood1.png</file>
         <file alias="wood2.png">images/wood2.png</file>
         <file alias="wood3.png">images/wood3.png</file>
+        <file alias="link_shadow.png">images/link_shadow.png</file>
+        <file alias="link_actions_32.png">images/link_actions_32.png</file>
+        <file alias="link_roll_32.png">images/link_roll_32.png</file>
     </qresource>
 </RCC>

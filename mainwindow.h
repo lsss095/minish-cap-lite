@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QPixmap>
+#include <QTimer>
 #include <vector>
 
 #include "player.h"
@@ -21,6 +23,7 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
 
 private:
@@ -30,10 +33,23 @@ private:
     GameMap gameMap;
     Camera camera;
 
+    QPixmap shadowPixmap;
+    QPixmap playerActionSheet;
+    QPixmap playerRollSheet;
+
     std::vector<OverlayObject> overlayObjects;
+
+    QTimer gameTimer;
+
+    bool keyW;
+    bool keyA;
+    bool keyS;
+    bool keyD;
+    bool keyL;
 
     void drawScene();
     void initOverlayObjects();
+    void updateGame();
 };
 
 #endif

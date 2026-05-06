@@ -26,10 +26,13 @@ qt_add_resources(homeworkdemo "resources"
     PREFIX "/"
     FILES
         images/minish_woods.png
-        images/wood.png
+        images/wood0.png
         images/wood1.png
         images/wood2.png
         images/wood3.png
+        images/link_shadow.png
+        images/link_actions_32.png
+        images/link_roll_32.png
 )
 
 target_link_libraries(homeworkdemo
