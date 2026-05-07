@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 
 #include <QPainter>
-#include <QDebug>
-#include <QDir>
 #include <QtGlobal>
 #include <cmath>
 
@@ -35,57 +33,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     screenLabel->setFocusPolicy(Qt::NoFocus);
 
-    qDebug() << "当前工作目录:" << QDir::currentPath();
-
+    // 加载地图和贴图
     gameMap.load(":/images/minish_woods.png");
 
     shadowPixmap = QPixmap(":/images/link_shadow.png");
-
-    qDebug() << "阴影是否加载成功:" << !shadowPixmap.isNull();
-    qDebug() << "阴影尺寸:" << shadowPixmap.width() << shadowPixmap.height();
-
-    if (shadowPixmap.isNull()) {
-        qDebug() << "阴影图片加载失败！请检查 resources.qrc 和图片路径。";
-    }
-
     playerActionSheet = QPixmap(":/images/link_actions_32.png");
-
-    qDebug() << "完整人物动作表是否加载成功:" << !playerActionSheet.isNull();
-    qDebug() << "完整人物动作表尺寸:" << playerActionSheet.width()
-             << playerActionSheet.height();
-
-    if (playerActionSheet.isNull()) {
-        qDebug() << "完整人物动作表加载失败！请检查 resources.qrc 和图片路径。";
-    }
-
     playerRollSheet = QPixmap(":/images/link_roll_32.png");
-
-    qDebug() << "翻滚动作表是否加载成功:" << !playerRollSheet.isNull();
-    qDebug() << "翻滚动作表尺寸:" << playerRollSheet.width()
-             << playerRollSheet.height();
-
-    if (playerRollSheet.isNull()) {
-        qDebug() << "翻滚动作表加载失败！请检查 resources.qrc 和图片路径。";
-    }
-
     minish1Sheet = QPixmap(":/images/link_minish1_sheet_32.png");
 
-    qDebug() << "Minish1动作表是否加载成功:" << !minish1Sheet.isNull();
-    qDebug() << "Minish1动作表尺寸:" << minish1Sheet.width()
-             << minish1Sheet.height();
-
-    if (minish1Sheet.isNull()) {
-        qDebug() << "Minish1动作表加载失败！请检查 resources.qrc 和图片路径。";
-    }
-
-    // 缩小形态贴图加载（素材待提供，暂时为空会用色块占位）
-    miniShadowPixmap = QPixmap(":/images/link_mini_shadow.png");
-    miniActionSheet = QPixmap(":/images/link_mini_actions.png");
-    miniRollSheet = QPixmap(":/images/link_mini_roll.png");
-
-    qDebug() << "缩小阴影是否加载成功:" << !miniShadowPixmap.isNull();
-    qDebug() << "缩小动作表是否加载成功:" << !miniActionSheet.isNull();
-    qDebug() << "缩小翻滚表是否加载成功:" << !miniRollSheet.isNull();
+    // 缩小形态贴图
+    miniShadowPixmap = QPixmap(":/images/mini_shadow.png");
+    miniActionSheet = QPixmap(":/images/mini_link_action_sheet_7.png");
+    miniRollSheet = QPixmap(":/images/mini_link_roll_7.png");
 
     initOverlayObjects();
 
@@ -95,16 +54,18 @@ MainWindow::MainWindow(QWidget *parent)
     gameTimer.start(24);
 }
 
+// 初始化透视遮挡物（树丛等，玩家可走入后方被遮挡）
 void MainWindow::initOverlayObjects()
 {
     overlayObjects.emplace_back(":/images/wood0.png", 529, 4);
-    overlayObjects.emplace_back(":/images/wood1.png", 545, 4);
-    overlayObjects.emplace_back(":/images/wood1.png", 465, 100);
-    overlayObjects.emplace_back(":/images/wood2.png", 529, 340);
+    overlayObjects.emplace_back(":/images/wood1.png", 449, 100);
+    overlayObjects.emplace_back(":/images/wood4.png", 529, 340);
     overlayObjects.emplace_back(":/images/wood2.png", 417, 324);
-    overlayObjects.emplace_back(":/images/wood3.png", 241, 180);
+    overlayObjects.emplace_back(":/images/wood3.png", 236, 180);
+    overlayObjects.emplace_back(":/images/wood5.png", 262, 356);
 }
 
+// 玩家是否与树桩区域相交
 bool MainWindow::isNearStump() const
 {
     QRect stumpRect(GameConfig::STUMP_X, GameConfig::STUMP_Y,
@@ -113,16 +74,15 @@ bool MainWindow::isNearStump() const
     return player.rect().intersects(stumpRect);
 }
 
+// 玩家是否紧贴树桩（各方向走一步都会与树桩相交）
 bool MainWindow::isBlockedByStump() const
 {
     QRect stumpRect(GameConfig::STUMP_X, GameConfig::STUMP_Y,
                     GameConfig::STUMP_W, GameConfig::STUMP_H);
 
-    // 检测林克移动一步后的位置是否与树桩区域相交
     QRect nextRect(player.x(), player.y(),
                    player.bodyWidth(), player.bodyHeight());
 
-    // 检测四个方向各走一步是否与树桩相交
     QRect rightRect(nextRect.x() + GameConfig::MOVE_STEP, nextRect.y(),
                     nextRect.width(), nextRect.height());
     QRect leftRect(nextRect.x() - GameConfig::MOVE_STEP, nextRect.y(),
@@ -139,6 +99,7 @@ bool MainWindow::isBlockedByStump() const
         || upRect.intersects(stumpRect);
 }
 
+// 正常翻滚动作表行映射（Down=0, Left=1, Right=2, Up=3）
 static int rollDirectionRow(Player::Direction direction)
 {
     if (direction == Player::Down) {
@@ -154,6 +115,23 @@ static int rollDirectionRow(Player::Direction direction)
     return 0;
 }
 
+// 缩小动作表行映射（Up=0, Left=1, Right=2, Down=3）
+static int miniActionRow(Player::Direction direction)
+{
+    if (direction == Player::Up) {
+        return 0;
+    } else if (direction == Player::Left) {
+        return 1;
+    } else if (direction == Player::Right) {
+        return 2;
+    } else if (direction == Player::Down) {
+        return 3;
+    }
+
+    return 0;
+}
+
+// 绘制整个游戏画面
 void MainWindow::drawScene()
 {
     if (gameMap.isNull()) return;
@@ -170,6 +148,7 @@ void MainWindow::drawScene()
 
     QPainter painter(&frame);
 
+    // 绘制地图
     QPixmap view = gameMap.pixmap().copy(camera.x(),
                                          camera.y(),
                                          GameConfig::LOGIC_WIDTH,
@@ -177,47 +156,12 @@ void MainWindow::drawScene()
 
     painter.drawPixmap(0, 0, view);
 
-    // 调试用：把障碍区画成半透明红色
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QColor(255, 0, 0, 80));
-
-    for (const QRect &rect : gameMap.blockedAreas()) {
-        QRect screenRect(rect.x() - camera.x(),
-                         rect.y() - camera.y(),
-                         rect.width(),
-                         rect.height());
-
-        painter.drawRect(screenRect);
-    }
-
-    // 调试用：标记树桩区域
-    painter.setBrush(QColor(0, 255, 0, 60));
-    painter.drawRect(GameConfig::STUMP_X - camera.x(),
-                     GameConfig::STUMP_Y - camera.y(),
-                     GameConfig::STUMP_W, GameConfig::STUMP_H);
-
-    painter.setPen(Qt::white);
-    painter.drawText(5,
-                     15,
-                     QString("Player: (%1, %2) %3")
-                         .arg(player.x())
-                         .arg(player.y())
-                         .arg(player.isMini() ? "[Mini]" : ""));
-
-    if (player.isNearStumpState() && !player.isMini()) {
-        painter.setPen(Qt::green);
-        painter.drawText(5, 25, "L: Shrink");
-    } else if (player.isNearStumpState() && player.isMini()) {
-        painter.setPen(Qt::green);
-        painter.drawText(5, 25, "L: Grow");
-    }
-
     int shadowScreenX = player.x() - camera.x();
     int shadowScreenY = player.y() - camera.y();
 
     QRect playerRect = player.rect();
 
-    // 缩小/放大动画期间：绘制过渡效果
+    // 缩小/放大过渡动画
     if (player.sizeState() == Player::Shrinking || player.sizeState() == Player::Growing) {
         int totalFrames = player.shrinkTotalFrames();
         int currentFrame = player.shrinkFrame();
@@ -225,7 +169,7 @@ void MainWindow::drawScene()
         float progress = static_cast<float>(currentFrame) / totalFrames;
 
         float normalScale = 1.0f;
-        float miniScale = 0.5f; // 缩小后约为原来一半
+        float miniScale = 0.5f;
 
         float scale;
         if (player.sizeState() == Player::Shrinking) {
@@ -244,7 +188,7 @@ void MainWindow::drawScene()
             painter.drawPixmap(shadowDrawX, shadowDrawY, shadowW, shadowH, shadowPixmap);
         }
 
-        // 绘制角色（用正常动作表缩放）
+        // 绘制角色（正常动作表缩放）
         int drawW = static_cast<int>(GameConfig::PLAYER_DRAW_WIDTH * scale);
         int drawH = static_cast<int>(GameConfig::PLAYER_DRAW_HEIGHT * scale);
         int linkDrawX = shadowScreenX - (drawW - player.bodyWidth()) / 2;
@@ -270,7 +214,7 @@ void MainWindow::drawScene()
         drawPlayer(painter, shadowScreenX, shadowScreenY);
     }
 
-    // 最后补画所有"遮挡玩家"的透视素材
+    // 绘制透视遮挡物
     for (const OverlayObject &obj : overlayObjects) {
         if (obj.isNull()) continue;
 
@@ -284,14 +228,37 @@ void MainWindow::drawScene()
         }
     }
 
+    // 白闪效果
+    if (player.sizeState() == Player::FlashWhite) {
+        // 缩小方向：16帧渐亮到全白
+        const int shrinkFlashRiseFrames = 16;
+        int currentFrame = player.flashFrame();
+        int alpha = 255 * (currentFrame + 1) / shrinkFlashRiseFrames;
+        if (alpha > 255) alpha = 255;
+        if (alpha < 0) alpha = 0;
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QColor(255, 255, 255, alpha));
+        painter.drawRect(0, 0, GameConfig::LOGIC_WIDTH, GameConfig::LOGIC_HEIGHT);
+    } else if (player.sizeState() == Player::FlashWhiteApproaching) {
+        if (player.isMini()) {
+            // 放大方向：全白覆盖
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(QColor(255, 255, 255, 255));
+            painter.drawRect(0, 0, GameConfig::LOGIC_WIDTH, GameConfig::LOGIC_HEIGHT);
+        }
+        // 缩小方向：不闪白，正常显示翻滚
+    }
+
     painter.end();
 
+    // 缩放到窗口大小显示
     screenLabel->setPixmap(frame.scaled(GameConfig::LOGIC_WIDTH * GameConfig::SCALE,
                                         GameConfig::LOGIC_HEIGHT * GameConfig::SCALE,
                                         Qt::IgnoreAspectRatio,
                                         Qt::FastTransformation));
 }
 
+// 绘制玩家角色（阴影+贴图）
 void MainWindow::drawPlayer(QPainter &painter, int shadowScreenX, int shadowScreenY)
 {
     bool mini = player.isMini();
@@ -299,7 +266,7 @@ void MainWindow::drawPlayer(QPainter &painter, int shadowScreenX, int shadowScre
     int bodyW = player.bodyWidth();
     int bodyH = player.bodyHeight();
 
-    // 1. 阴影
+    // 阴影
     int shadowDrawW = mini ? GameConfig::MINI_SHADOW_DRAW_WIDTH : GameConfig::SHADOW_DRAW_WIDTH;
     int shadowDrawH = mini ? GameConfig::MINI_SHADOW_DRAW_HEIGHT : GameConfig::SHADOW_DRAW_HEIGHT;
 
@@ -311,29 +278,32 @@ void MainWindow::drawPlayer(QPainter &painter, int shadowScreenX, int shadowScre
     } else if (!mini && !shadowPixmap.isNull()) {
         painter.drawPixmap(shadowDrawX, shadowDrawY, shadowDrawW, shadowDrawH, shadowPixmap);
     } else {
+        // 备用阴影
         painter.setPen(Qt::NoPen);
         painter.setBrush(QColor(0, 0, 0, 90));
         painter.drawEllipse(shadowScreenX, shadowScreenY, bodyW, bodyH);
     }
 
-    // 2. 角色贴图
+    // 角色贴图
     int drawW = mini ? GameConfig::MINI_DRAW_WIDTH : GameConfig::PLAYER_DRAW_WIDTH;
     int drawH = mini ? GameConfig::MINI_DRAW_HEIGHT : GameConfig::PLAYER_DRAW_HEIGHT;
     int frameW = mini ? GameConfig::MINI_FRAME_WIDTH : GameConfig::PLAYER_FRAME_WIDTH;
     int frameH = mini ? GameConfig::MINI_FRAME_HEIGHT : GameConfig::PLAYER_FRAME_HEIGHT;
 
     int linkDrawX = shadowScreenX - (drawW - bodyW) / 2;
-    int linkDrawY = shadowScreenY - drawH + bodyH + (mini ? 2 : 5);
+    int linkDrawY = shadowScreenY - drawH + bodyH + (mini ? 1 : 5);
 
-    // 翻滚上/下树桩时的抛物线弧线偏移
+    // 翻滚抛物线偏移
     int arcOffset = player.rollArcOffset();
     linkDrawY += arcOffset;
 
+    // 翻滚动作
     if (player.action() == Player::Roll) {
         QPixmap &sheet = mini ? miniRollSheet : playerRollSheet;
         if (!sheet.isNull()) {
             int frameX = player.animationFrame() * frameW;
-            int frameY = rollDirectionRow(player.direction()) * frameH;
+            int row = mini ? miniActionRow(player.direction()) : rollDirectionRow(player.direction());
+            int frameY = row * frameH;
             QPixmap currentFrame = sheet.copy(frameX, frameY, frameW, frameH);
             painter.drawPixmap(linkDrawX, linkDrawY, drawW, drawH, currentFrame);
         } else {
@@ -343,9 +313,10 @@ void MainWindow::drawPlayer(QPainter &painter, int shadowScreenX, int shadowScre
             painter.drawRect(linkDrawX, linkDrawY, drawW, drawH);
         }
     } else if (player.action() == Player::Minish1) {
+        // 树桩等待动画
         if (!minish1Sheet.isNull()) {
             int frameX = player.animationFrame() * frameW;
-            int frameY = 0;  // Minish1只有一行，四个朝向共用
+            int frameY = 0;  // 只有一行
             QPixmap currentFrame = minish1Sheet.copy(frameX, frameY, frameW, frameH);
             painter.drawPixmap(linkDrawX, linkDrawY, drawW, drawH, currentFrame);
         } else {
@@ -354,10 +325,17 @@ void MainWindow::drawPlayer(QPainter &painter, int shadowScreenX, int shadowScre
             painter.drawRect(linkDrawX, linkDrawY, drawW, drawH);
         }
     } else {
+        // 站立/行走动作
         QPixmap &sheet = mini ? miniActionSheet : playerActionSheet;
         if (!sheet.isNull()) {
             int frameX = player.animationFrame() * frameW;
-            int frameY = player.actionRow() * frameH;
+            int frameY;
+            if (mini) {
+                // 缩小动作表行映射
+                frameY = miniActionRow(player.direction()) * frameH;
+            } else {
+                frameY = player.actionRow() * frameH;
+            }
             QPixmap currentFrame = sheet.copy(frameX, frameY, frameW, frameH);
             painter.drawPixmap(linkDrawX, linkDrawY, drawW, drawH, currentFrame);
         } else {
@@ -369,6 +347,7 @@ void MainWindow::drawPlayer(QPainter &painter, int shadowScreenX, int shadowScre
     }
 }
 
+// 按键按下顺序管理
 void MainWindow::pushKeyOrder(Qt::Key key)
 {
     removeKeyOrder(key);
@@ -426,21 +405,21 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    int mouseX = event->pos().x() / GameConfig::SCALE + camera.x();
-    int mouseY = event->pos().y() / GameConfig::SCALE + camera.y();
-
-    qDebug() << "点击地图坐标:" << mouseX << mouseY;
+    Q_UNUSED(event);
 }
 
+// 游戏主循环（每帧调用）
 void MainWindow::updateGame()
 {
     if (gameMap.isNull()) return;
 
     bool hasDirectionKey = keyW || keyA || keyS || keyD;
 
-    // 走向树桩中心 / 平滑移出 / 缩小/放大动画期间：只更新动画帧，不接受操作
+    // 过渡动画期间：只更新动画帧，不接受操作
     if (player.sizeState() == Player::Approaching
         || player.sizeState() == Player::LeavingStump
+        || player.sizeState() == Player::FlashWhite
+        || player.sizeState() == Player::FlashWhiteApproaching
         || player.sizeState() == Player::Shrinking
         || player.sizeState() == Player::Growing) {
         player.updateAnimation();
@@ -448,12 +427,19 @@ void MainWindow::updateGame()
         return;
     }
 
-    // NearStump 状态：已到达树桩中心，等待按L
+    // NearStump状态
     if (player.isNearStumpState()) {
-        // 更新Minish1动画帧
+        // 放大方向：自动触发白闪变大
+        if (player.isMini()) {
+            player.startGrowFlash();
+            drawScene();
+            return;
+        }
+
+        // 缩小方向：等待按方向键离开或按L缩小
         player.updateAnimation();
 
-        // 按方向键持续8帧：平滑移出树桩区域
+        // 按方向键持续8帧：移出树桩
         if (hasDirectionKey) {
             if (keyW) {
                 player.setDirection(Player::Up);
@@ -472,13 +458,9 @@ void MainWindow::updateGame()
             return;
         } else {
             player.resetLeaveContactFrames();
-            // 按L键且无方向键：执行缩小或放大
+            // 按L键：执行缩小
             if (keyL) {
-                if (!player.isMini()) {
-                    player.startShrink();
-                } else {
-                    player.startGrow();
-                }
+                player.startShrink();
                 keyL = false;
             }
             drawScene();
@@ -487,10 +469,9 @@ void MainWindow::updateGame()
 
     }
 
-    // NearStump 状态下已处理完毕，不会再走到这里
-
-    // 方向键 + L：翻滚
-    if (keyL && hasDirectionKey && player.canRoll()) {
+    // 方向键+L：翻滚
+    if (keyL && hasDirectionKey && player.canRoll()
+        && !(player.isShrunk() && isBlockedByStump())) {
         if (keyW) {
             player.setDirection(Player::Up);
         } else if (keyS) {
@@ -506,11 +487,11 @@ void MainWindow::updateGame()
         keyL = false;
     }
 
-    // 正在翻滚时
+    // 翻滚中
     if (player.action() == Player::Roll) {
         int dx = 0;
         int dy = 0;
-        int rollStep = player.isMini() ? GameConfig::MOVE_STEP + 1 : GameConfig::ROLL_STEP;
+        int rollStep = player.isMini() ? GameConfig::MINI_ROLL_STEP : GameConfig::ROLL_STEP;
 
         if (player.direction() == Player::Up) {
             dy = -rollStep;
@@ -537,36 +518,39 @@ void MainWindow::updateGame()
         return;
     }
 
-    // 如果有锁定动作，不执行普通走路
+    // 动作锁定时不执行普通移动
     if (player.isActionLocked()) {
         player.updateAnimation();
         drawScene();
         return;
     }
 
+    // 普通行走
     int dx = 0;
     int dy = 0;
 
+    int moveStep = player.isMini() ? GameConfig::MINI_MOVE_STEP : GameConfig::MOVE_STEP;
+
     if (keyW) {
-        dy -= GameConfig::MOVE_STEP;
+        dy -= moveStep;
     }
 
     if (keyS) {
-        dy += GameConfig::MOVE_STEP;
+        dy += moveStep;
     }
 
     if (keyA) {
-        dx -= GameConfig::MOVE_STEP;
+        dx -= moveStep;
     }
 
     if (keyD) {
-        dx += GameConfig::MOVE_STEP;
+        dx += moveStep;
     }
 
     bool isMoving = (dx != 0 || dy != 0);
 
     if (isMoving) {
-        // 根据按键按下顺序决定朝向，先按下的优先
+        // 按键按下顺序决定朝向
         for (Qt::Key key : keyOrder) {
             if (key == Qt::Key_W && keyW) {
                 player.setDirection(Player::Up);
@@ -585,7 +569,7 @@ void MainWindow::updateGame()
 
         player.startMoving();
 
-        // 分离 X/Y 轴碰撞检测：斜向碰墙时保留未碰撞方向，实现滑墙效果
+        // 分离X/Y轴碰撞检测，实现滑墙效果
         int newX = player.x();
         int newY = player.y();
 
@@ -618,15 +602,15 @@ void MainWindow::updateGame()
             player.moveTo(newX, newY);
         }
 
-        // 按了方向键但坐标没变，且是被树桩挡住的，累加帧数
-        if (player.x() == oldX && player.y() == oldY
+        // 被树桩挡住累加帧数（仅Normal状态）
+        if (!player.isShrunk()
+            && player.x() == oldX && player.y() == oldY
             && isBlockedByStump()
             && player.sizeState() != Player::NearStump
             && player.sizeState() != Player::Approaching) {
             player.incStumpContactFrames();
             if (player.stumpContactFrames() >= 8) {
-                bool toMini = !player.isMini();
-                player.startApproach(toMini);
+                player.startShrinkFlash();  // 白闪覆盖翻滚走向树桩中心
             }
         } else {
             player.resetStumpContactFrames();
@@ -636,6 +620,18 @@ void MainWindow::updateGame()
     } else {
         player.stopMoving();
         player.resetStumpContactFrames();
+    }
+
+    // 缩小状态下：与树桩接触且按L键超过8帧，白闪变大
+    if (player.isShrunk() && player.sizeState() == Player::Mini
+        && isBlockedByStump() && keyL) {
+        player.incLKeyFrames();
+        if (player.lKeyFrames() >= 8) {
+            player.startGrowFlash();
+            player.resetLKeyFrames();
+        }
+    } else if (player.sizeState() == Player::Mini) {
+        player.resetLKeyFrames();
     }
 
     drawScene();

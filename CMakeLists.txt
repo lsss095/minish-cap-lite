@@ -30,10 +30,15 @@ qt_add_resources(homeworkdemo "resources"
         images/wood1.png
         images/wood2.png
         images/wood3.png
+        images/wood4.png
+        images/wood5.png
         images/link_shadow.png
         images/link_actions_32.png
         images/link_roll_32.png
         images/link_minish1_sheet_32.png
+        images/mini_link_action_sheet_7.png
+        images/mini_shadow.png
+        images/mini_link_roll_7.png
 )
 
 target_link_libraries(homeworkdemo

@@ -1,3 +1,5 @@
+// 地图类：管理地图贴图和碰撞区域
+
 #ifndef GAMEMAP_H
 #define GAMEMAP_H
 
@@ -20,11 +22,11 @@ public:
     const QPixmap &pixmap() const;
     const std::vector<QRect> &blockedAreas() const;
 
-    bool canMoveTo(const QRect &playerRect) const;
+    bool canMoveTo(const QRect &playerRect) const; // 检测是否可移动到指定区域
 
 private:
     QPixmap m_map;
-    std::vector<QRect> m_blockedAreas;
+    std::vector<QRect> m_blockedAreas; // 碰撞阻挡区域
 
     void initBlockedAreas();
 };

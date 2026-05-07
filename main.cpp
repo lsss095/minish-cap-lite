@@ -1,3 +1,5 @@
+// 程序入口
+
 #include "mainwindow.h"
 #include <QApplication>
 

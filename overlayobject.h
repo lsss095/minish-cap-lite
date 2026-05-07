@@ -1,3 +1,5 @@
+// 透视遮挡物：玩家走入后方时覆盖在玩家上方的装饰物（如树丛）
+
 #ifndef OVERLAYOBJECT_H
 #define OVERLAYOBJECT_H
 

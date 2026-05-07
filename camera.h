@@ -1,3 +1,5 @@
+// 摄像机类：跟随玩家移动，限制在地图边界内
+
 #ifndef CAMERA_H
 #define CAMERA_H
 

@@ -51,6 +51,7 @@ const std::vector<QRect> &GameMap::blockedAreas() const
     return m_blockedAreas;
 }
 
+// 碰撞检测：玩家区域不能超出地图边界或与阻挡区域相交
 bool GameMap::canMoveTo(const QRect &playerRect) const
 {
     if (m_map.isNull()) return false;
@@ -71,6 +72,7 @@ bool GameMap::canMoveTo(const QRect &playerRect) const
     return true;
 }
 
+// 初始化所有碰撞阻挡区域
 void GameMap::initBlockedAreas()
 {
     m_blockedAreas.clear();
@@ -106,8 +108,9 @@ void GameMap::initBlockedAreas()
     m_blockedAreas.push_back(QRect(145, 276, 32, 32));
     m_blockedAreas.push_back(QRect(177, 276, 64, 64));
     m_blockedAreas.push_back(QRect(545, 20, 32, 32));
-
-    // 树桩障碍物区域
+    m_blockedAreas.push_back(QRect(257, 356, 96, 6));
+    m_blockedAreas.push_back(QRect(257, 366, 96, 6));
+    // 树桩障碍物
     m_blockedAreas.push_back(QRect(GameConfig::STUMP_X, GameConfig::STUMP_Y,
                                     GameConfig::STUMP_W, GameConfig::STUMP_H));
 }

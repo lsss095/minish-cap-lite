@@ -5,9 +5,14 @@
         <file alias="wood1.png">images/wood1.png</file>
         <file alias="wood2.png">images/wood2.png</file>
         <file alias="wood3.png">images/wood3.png</file>
+        <file alias="wood4.png">images/wood4.png</file>
+        <file alias="wood4.png">images/wood5.png</file>
         <file alias="link_shadow.png">images/link_shadow.png</file>
         <file alias="link_actions_32.png">images/link_actions_32.png</file>
         <file alias="link_roll_32.png">images/link_roll_32.png</file>
-        <file alias="link_minish1_sheet_32_32.png">images/link_minish1_sheet_32.png</file>
+        <file alias="link_minish1_sheet_32.png">images/link_minish1_sheet_32.png</file>
+        <file alias="mini_link_action_sheet_7.png">images/mini_link_action_sheet_7.png</file>
+        <file alias="mini_shadow.png">images/mini_shadow.png</file>
+        <file alias="mini_link_roll_7.png">images/mini_link_roll_7.png</file>
     </qresource>
 </RCC>

@@ -3,7 +3,7 @@
 
 Camera::Camera()
     : m_x(0),
-    m_y(0)
+      m_y(0)
 {
 }
 
@@ -17,6 +17,7 @@ int Camera::y() const
     return m_y;
 }
 
+// 以玩家为中心更新摄像机位置，限制在地图边界内
 void Camera::update(int playerX, int playerY, int mapWidth, int mapHeight)
 {
     m_x = playerX - GameConfig::LOGIC_WIDTH / 2;
