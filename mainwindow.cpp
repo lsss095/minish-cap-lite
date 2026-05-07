@@ -161,58 +161,7 @@ void MainWindow::drawScene()
 
     QRect playerRect = player.rect();
 
-    // 缩小/放大过渡动画
-    if (player.sizeState() == Player::Shrinking || player.sizeState() == Player::Growing) {
-        int totalFrames = player.shrinkTotalFrames();
-        int currentFrame = player.shrinkFrame();
-
-        float progress = static_cast<float>(currentFrame) / totalFrames;
-
-        float normalScale = 1.0f;
-        float miniScale = 0.5f;
-
-        float scale;
-        if (player.sizeState() == Player::Shrinking) {
-            scale = normalScale + (miniScale - normalScale) * progress;
-        } else {
-            scale = miniScale + (normalScale - miniScale) * progress;
-        }
-
-        // 绘制阴影
-        int shadowW = static_cast<int>(GameConfig::SHADOW_DRAW_WIDTH * scale);
-        int shadowH = static_cast<int>(GameConfig::SHADOW_DRAW_HEIGHT * scale);
-        int shadowDrawX = shadowScreenX - (shadowW - player.bodyWidth()) / 2;
-        int shadowDrawY = shadowScreenY - (shadowH - player.bodyHeight()) / 2 + 1;
-
-        if (!shadowPixmap.isNull()) {
-            painter.drawPixmap(shadowDrawX, shadowDrawY, shadowW, shadowH, shadowPixmap);
-        }
-
-        // 绘制角色（正常动作表缩放）
-        int drawW = static_cast<int>(GameConfig::PLAYER_DRAW_WIDTH * scale);
-        int drawH = static_cast<int>(GameConfig::PLAYER_DRAW_HEIGHT * scale);
-        int linkDrawX = shadowScreenX - (drawW - player.bodyWidth()) / 2;
-        int linkDrawY = shadowScreenY - drawH + player.bodyHeight() + 5;
-
-        if (!playerActionSheet.isNull()) {
-            int frameX = player.animationFrame() * GameConfig::PLAYER_FRAME_WIDTH;
-            int frameY = player.actionRow() * GameConfig::PLAYER_FRAME_HEIGHT;
-            QPixmap currentFrame = playerActionSheet.copy(frameX, frameY,
-                                                          GameConfig::PLAYER_FRAME_WIDTH,
-                                                          GameConfig::PLAYER_FRAME_HEIGHT);
-            painter.drawPixmap(linkDrawX, linkDrawY, drawW, drawH, currentFrame);
-        }
-
-        // 闪烁效果
-        if (currentFrame % 3 == 0) {
-            painter.setPen(Qt::NoPen);
-            painter.setBrush(QColor(255, 255, 255, 60));
-            painter.drawEllipse(shadowScreenX - 2, shadowScreenY - 2,
-                                player.bodyWidth() + 4, player.bodyHeight() + 4);
-        }
-    } else {
-        drawPlayer(painter, shadowScreenX, shadowScreenY);
-    }
+    drawPlayer(painter, shadowScreenX, shadowScreenY);
 
     // 绘制透视遮挡物
     for (const OverlayObject &obj : overlayObjects) {
@@ -415,13 +364,11 @@ void MainWindow::updateGame()
 
     bool hasDirectionKey = keyW || keyA || keyS || keyD;
 
-    // 过渡动画期间：只更新动画帧，不接受操作
+    // 白闪动画和走向树桩动画期间
     if (player.sizeState() == Player::Approaching
         || player.sizeState() == Player::LeavingStump
         || player.sizeState() == Player::FlashWhite
-        || player.sizeState() == Player::FlashWhiteApproaching
-        || player.sizeState() == Player::Shrinking
-        || player.sizeState() == Player::Growing) {
+        || player.sizeState() == Player::FlashWhiteApproaching) {
         player.updateAnimation();
         drawScene();
         return;

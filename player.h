@@ -1,4 +1,4 @@
-// 角色类：管理林克的状态、动作、缩小/放大流程
+// 角色类：管理林克的状态、动作
 
 #ifndef PLAYER_H
 #define PLAYER_H
@@ -31,9 +31,7 @@ public:
         NearStump,             // 到达树桩中心，等待按L
         LeavingStump,          // 平滑移出树桩区域
         FlashWhite,            // 全屏白闪
-        Shrinking,             // 缩小动画中
         Mini,                  // 已缩小
-        Growing,               // 放大动画中
         FlashWhiteApproaching  // 白闪+走向树桩中心
     };
 
@@ -72,7 +70,6 @@ public:
     // 缩小/放大
     void startShrink();
     void startShrinkFlash();  // 白闪覆盖翻滚走向树桩中心（缩小）
-    void startGrow();
     void startGrowFlash();   // 白闪覆盖翻滚走向树桩中心（放大）
     void startApproach(bool toMini); // 走向树桩中心
     void startLeaveStump();           // 平滑移出树桩区域
@@ -88,8 +85,6 @@ public:
     bool minish1FirstLoop() const;   // Minish1是否第一遍
     int flashFrame() const;
     int flashTotalFrames() const;
-    int shrinkFrame() const;
-    int shrinkTotalFrames() const;
     int lKeyFrames() const;   // L键持续帧数
     void incLKeyFrames();
     void resetLKeyFrames();
@@ -111,7 +106,6 @@ private:
     int m_animationCounter;
     int m_rollCooldown;
 
-    int m_shrinkFrame;         // 缩小/放大动画当前帧
     bool m_approachToMini;     // 走向树桩后缩小还是放大
     int m_approachPauseFrames;
     int m_stumpContactFrames;  // 连续碰撞树桩帧数

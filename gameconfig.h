@@ -63,8 +63,6 @@ const int MINI_ROLL_FRAME_COUNT = 5;     // 翻滚帧数（上下方向）
 const int MINI_ROLL_SIDE_FRAME_COUNT = 5; // 翻滚帧数（左右方向）
 
 // 缩小/放大流程参数
-const int SHRINK_ANIMATION_FRAMES = 20; // 缩小/放大过渡动画帧数
-
 const int SHRINK_FLASH_FRAMES = 16; // 白闪渐亮帧数
 
 const int SHRINK_RESULT_X = 565; // 缩小后传送目标X

@@ -74,10 +74,15 @@ include CMakeFiles/homeworkdemo.dir/flags.make
 .qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/wood1.png
 .qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/wood2.png
 .qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/wood3.png
+.qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/wood4.png
+.qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/wood5.png
 .qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/link_shadow.png
 .qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/link_actions_32.png
 .qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/link_roll_32.png
 .qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/link_minish1_sheet_32.png
+.qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/mini_link_action_sheet_7.png
+.qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/mini_shadow.png
+.qt/rcc/qrc_resources.cpp: /Users/lansu/homeworkdemo/images/mini_link_roll_7.png
 .qt/rcc/qrc_resources.cpp: .qt/rcc/resources.qrc
 .qt/rcc/qrc_resources.cpp: /opt/homebrew/share/qt/libexec/rcc
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/lansu/homeworkdemo/cmake-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Running rcc for resource resources"

@@ -5,10 +5,15 @@
     <file alias="images/wood1.png">/Users/lansu/homeworkdemo/images/wood1.png</file>
     <file alias="images/wood2.png">/Users/lansu/homeworkdemo/images/wood2.png</file>
     <file alias="images/wood3.png">/Users/lansu/homeworkdemo/images/wood3.png</file>
+    <file alias="images/wood4.png">/Users/lansu/homeworkdemo/images/wood4.png</file>
+    <file alias="images/wood5.png">/Users/lansu/homeworkdemo/images/wood5.png</file>
     <file alias="images/link_shadow.png">/Users/lansu/homeworkdemo/images/link_shadow.png</file>
     <file alias="images/link_actions_32.png">/Users/lansu/homeworkdemo/images/link_actions_32.png</file>
     <file alias="images/link_roll_32.png">/Users/lansu/homeworkdemo/images/link_roll_32.png</file>
     <file alias="images/link_minish1_sheet_32.png">/Users/lansu/homeworkdemo/images/link_minish1_sheet_32.png</file>
+    <file alias="images/mini_link_action_sheet_7.png">/Users/lansu/homeworkdemo/images/mini_link_action_sheet_7.png</file>
+    <file alias="images/mini_shadow.png">/Users/lansu/homeworkdemo/images/mini_shadow.png</file>
+    <file alias="images/mini_link_roll_7.png">/Users/lansu/homeworkdemo/images/mini_link_roll_7.png</file>
   </qresource>
 </RCC>
 

@@ -12,7 +12,6 @@ Player::Player()
       m_animationFrame(0),
       m_animationCounter(0),
       m_rollCooldown(0),
-      m_shrinkFrame(0),
       m_approachToMini(true),
       m_approachPauseFrames(0),
       m_stumpContactFrames(0),
@@ -179,16 +178,6 @@ void Player::startShrink()
     setAction(Idle);
 }
 
-// 放大动画
-void Player::startGrow()
-{
-    m_sizeState = Growing;
-    m_shrinkFrame = 0;
-    m_actionLocked = true;
-    m_isMoving = false;
-    setAction(Idle);
-}
-
 // 白闪覆盖翻滚走向树桩中心（放大方向）
 void Player::startGrowFlash()
 {
@@ -341,16 +330,6 @@ int Player::flashFrame() const
 int Player::flashTotalFrames() const
 {
     return GameConfig::SHRINK_FLASH_FRAMES;
-}
-
-int Player::shrinkFrame() const
-{
-    return m_shrinkFrame;
-}
-
-int Player::shrinkTotalFrames() const
-{
-    return GameConfig::SHRINK_ANIMATION_FRAMES;
 }
 
 int Player::lKeyFrames() const
@@ -541,27 +520,6 @@ void Player::updateAnimation()
         } else {
             // 放大方向：闪白16帧后离开
             if (m_flashFrame >= GameConfig::SHRINK_FLASH_FRAMES) {
-                m_isShrunk = false;
-                m_direction = Down;
-                m_approachToMini = true;
-                startLeaveStump();
-            }
-        }
-        return;
-    }
-
-    // 缩小/放大动画
-    if (m_sizeState == Shrinking || m_sizeState == Growing) {
-        m_shrinkFrame++;
-        if (m_shrinkFrame >= GameConfig::SHRINK_ANIMATION_FRAMES) {
-            if (m_sizeState == Shrinking) {
-                m_sizeState = Mini;
-                m_actionLocked = false;
-                m_shrinkFrame = 0;
-                m_isShrunk = true;
-            } else {
-                // 放大完成：朝下离开树桩
-                m_shrinkFrame = 0;
                 m_isShrunk = false;
                 m_direction = Down;
                 m_approachToMini = true;
